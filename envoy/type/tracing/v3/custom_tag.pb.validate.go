@@ -238,6 +238,48 @@ func (m *CustomTag) validate(all bool) error {
 			}
 		}
 
+	case *CustomTag_ResponseHeader:
+		if v == nil {
+			err := CustomTagValidationError{
+				field:  "Type",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		oneofTypePresent = true
+
+		if all {
+			switch v := interface{}(m.GetResponseHeader()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CustomTagValidationError{
+						field:  "ResponseHeader",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CustomTagValidationError{
+						field:  "ResponseHeader",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResponseHeader()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CustomTagValidationError{
+					field:  "ResponseHeader",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	default:
 		_ = v // ensures v is used
 	}
